@@ -10,6 +10,8 @@
 #include <string.h>
 #include <hexagon_standalone.h>
 
+#define DEBUG 1
+
 #define MAX 2
 #define PPQ 2   //pixels per quadrant
 #define QRANGE 2.0F  // quadrant range
