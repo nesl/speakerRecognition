@@ -1,6 +1,6 @@
 VERSION=5
 OPTIMIZE=2
-INCLUDE=/home/k/Qualcomm/HEXAGON_Tools/5.0.07/gnu/hexagon/include/
+INCLUDE=/home/cgshen/Qualcomm/HEXAGON_Tools/5.0.07/gnu/hexagon/include/
 CFLAGS= -static -Os -O2 -fno-inline -fomit-frame-pointer -fno-zero-initialized-in-bss  -fmerge-constants # -fPIC
 
 gmm_test_matlab:
