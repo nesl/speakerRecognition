@@ -13,16 +13,16 @@ gmm_hexagon_standalone:
 	hexagon-clang -mv5 $(CFLAGS) gmm_standalone.c -o gmm_standalone_hexagon -lm -lhexagon
 
 thread:
-	hexagon-clang -mv5 $(CFLAGS) mandelbrot.c -o mandelbrot -lhexagon
+	hexagon-clang -mv5 $(CFLAGS) thread_test.c -o thread_test -lhexagon
 
 clean:
-	rm -f *.o gmm_matlab gmm_standalone gmm_standalone_hexagon mandelbrot
+	rm -f *.o gmm_matlab gmm_standalone gmm_standalone_hexagon thread_test
 
 sim:
 	hexagon-sim -mv5 --timing gmm_standalone_hexagon
 
 sim_thread:
-	hexagon-sim -mv5 --timing mandelbrot
+	hexagon-sim -mv5 --timing thread_test
 
 # gmm_test_x86:
 # 	gcc -g -pg codegen/lib/gaussmixp/*.c gmm_test_x86.c -o gmm_test_x86 -lm
