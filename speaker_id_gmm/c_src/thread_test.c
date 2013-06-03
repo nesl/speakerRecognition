@@ -13,7 +13,7 @@
 #include <hexagon_standalone.h>
 #include "hexagon_sim_timer.h"
 
-#define COMPUTE_THREADS 1
+#define COMPUTE_THREADS 2
 #define STACK_SIZE 16384
 
 #define FORMAT "%lf\n"
@@ -40,10 +40,10 @@ static char str[5];
 static real_T logprob[NR_SPEAKER];
 static real_T min, max;
 
-static void compute_fractal (int * quadrant);
+static void compute_fractal (int * quadrant, int i);
 static int Mx;
 static char stack [COMPUTE_THREADS][STACK_SIZE] __attribute__ ((__aligned__(8))); ;
-static int quadrants [10] = {1,2,3,4,5,6,7,8,9,10};
+static int quadrants [5] = {0,1,2,3,4};
 
 
 double gaussmixp(real_T x[12], real_T mu[108], real_T sigma[108], real_T w[9]) {
@@ -222,14 +222,20 @@ int main (int argc, char **argv)
     hexagon_sim_init_timer();
     hexagon_sim_start_timer();
 
-    for (i = 0; i < size; i++) {
-        /* gmm prob for each frame per each speaker */
-        for (j = 0; j < num_speaker; j++) {
-            by_speaker gmm = speaker_gmm[j];
-            real_T result = gaussmixp(test_sample[i], gmm.m_m, gmm.m_v, gmm.m_w);
-            logprob[j] += result;
+
+    // /* gmm prob for each frame per each speaker */
+    // for (j = 0; j < num_speaker; j++) {
+
+    // }
+    j = 0;
+    while (j < num_speaker) {
+        for (i = 0; i < COMPUTE_THREADS && j < num_speaker; i++, j++) {
+            thread_create ((void *) compute_fractal, &stack [i][STACK_SIZE], i + 1, quadrants + j);
+            printf("create thread %d for j=%d\n", (i+1), j);
         }
+        thread_join (((1 << COMPUTE_THREADS) - 1) << 1);
     }
+
 
     int max_prob = -1e6;
     int max_index = -1;
@@ -264,16 +270,30 @@ int main (int argc, char **argv)
     return (0);
 }
 
-static void compute_fractal (int * quadrant)
+static void compute_fractal (int * quadrant, int i)
 {
     while (1)
     {
         if (trylockMutex (&Mx))
         {
             printf("thread %d for: %d\n", thread_get_tnum(), *quadrant);
-            printf("Done computing fractal for thread %d.\n", thread_get_tnum());
             break;
         }
+
+    }
+    unlockMutex (&Mx);
+
+    int j = *quadrant;
+    by_speaker gmm = speaker_gmm[j];
+    int iii = 0;
+    for (iii = 0; iii < 167; iii++) {
+        real_T result = gaussmixp(test_sample[iii], gmm.m_m, gmm.m_v, gmm.m_w);
+        logprob[j] += result;
+    }
+
+    lockMutex (&Mx);
+    {
+        printf("\nDone computing fractal for thread %d.\n", thread_get_tnum());
     }
     unlockMutex (&Mx);
 }

@@ -1,0 +1,47 @@
+cgshen@chenguang-ubuntu:~/workspace/speakerRecognition/speaker_id_gmm/c_src$ make sim_thread 
+hexagon-sim -mv5 --timing thread_test
+In load_speaker_gmm
+Finish reading gmms.
+1 ../../test_data_5/sample_data1.txt
+In load_test_sample
+test data #1: manae
+167
+create thread 1 for j=0
+thread 1 for: 0
+create thread 2 for j=1
+thread 2 for: 1
+
+Done computing fractal for thread 1.
+
+Done computing fractal for thread 2.
+create thread 1 for j=2
+thread 1 for: 2
+create thread 2 for j=3
+thread 2 for: 3
+
+Done computing fractal for thread 1.
+
+Done computing fractal for thread 2.
+create thread 1 for j=4
+thread 1 for: 4
+
+Done computing fractal for thread 1.
+result=-3260.729881
+result=-3992.921446
+result=-3689.499115
+result=-3503.423115
+result=-3825.553417
+speaker label = 1
+Samples=1
+Total cycles=14823060
+Max cycles=14823060
+Min cycles=14823060
+Avg cycles=14823060
+
+Done!
+	T0: Insns=30140354 Tcycles=22040179
+	T1: Insns=36915895 Tcycles=22040179
+	T2: Insns=24621299 Tcycles=22040179
+	Total: Insns=91677548 Pcycles=66120538
+	Simulator speed=2.808800 Mips
+	Ratio to Real Time (500 MHz) = ~1/247 (elapsed time = 32.639402s)
