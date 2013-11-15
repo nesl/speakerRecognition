@@ -3,14 +3,14 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h> 
-#include "hexagon_sim_timer.h"
+//#include "hexagon_sim_timer.h"
 
-#define FORMAT "%lf\n"
+#define FORMAT "%f\n"
 #define PREC "%.3f\n"
 #define NR_SPEAKER 5
 #define SAMPLE_SIZE 167
 
-typedef double real_T;
+typedef float real_T;
 
 typedef struct by_speaker {
 	char name[10];
@@ -148,6 +148,17 @@ void load_speaker_gmm () {
 	}
 	printf("Finish reading gmms.\n");
 	fclose(fin);
+
+	// printf("={\n");
+	// for (i = 0; i < num_speaker; i++) {
+	// 	int j = 0;
+	// 	printf("{%f", speaker_gmm[i].m_w[0]);
+	// 	for (j = 1; j < 9; j++) {
+	// 		printf(",%f", speaker_gmm[i].m_w[j]);
+	// 	}
+	// 	printf("},\n");
+	// }
+	// printf("}\n");
 }
 
 int load_test_sample (const char *file_name) {
@@ -189,8 +200,8 @@ int main() {
 	int k = 1, i = 0, j = 0;
 	int correct = 0;
 	
-	hexagon_sim_init_timer();
-	hexagon_sim_start_timer();
+	//hexagon_sim_init_timer();
+	//hexagon_sim_start_timer();
 
 	//for (k = 1; k <= 48; k++) {
 		memset(logprob, 0, sizeof(logprob));
@@ -206,6 +217,11 @@ int main() {
 		int size = load_test_sample(filename);
 		printf("%d\n", size);
 		for (i = 0; i < size; i++) {
+			printf("{%f", test_sample[i][0]);
+			for (j = 1; j < 12; j++) {
+				printf(",%f", test_sample[i][j]);
+			}
+			printf("},\n");
 			/* gmm prob for each frame per each speaker */
 			for (j = 0; j < num_speaker; j++) {
 				by_speaker gmm = speaker_gmm[j];
@@ -234,8 +250,8 @@ int main() {
 	// printf(PREC, max);
 
 
-	hexagon_sim_end_timer();
-	hexagon_sim_show_timer(stdout);
+	//hexagon_sim_end_timer();
+	//hexagon_sim_show_timer(stdout);
 	
 	return 0;
 }
